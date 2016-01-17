@@ -1,0 +1,2 @@
+class BreatheIn::Scraper
+end

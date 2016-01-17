@@ -1,5 +1,4 @@
-require "breathe_in/version"
-
 module BreatheIn
-  # Your code goes here...
 end
+
+require_relative "../config/environment"
