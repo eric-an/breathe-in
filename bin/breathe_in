@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require "./lib/breathe_in"
+
+BreatheIn::Scraper.new.get_page
