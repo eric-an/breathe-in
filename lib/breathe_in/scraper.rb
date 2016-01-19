@@ -11,10 +11,6 @@ class BreatheIn::Scraper
     @@scraped
   end
 
-  def self.reset
-    @@air_quality_info.clear
-  end
-
   def self.scraped_page(zipcode)
     begin
       @@scraped = Nokogiri::HTML(open("http://airnow.gov/?action=airnow.local_city&zipcode=#{zipcode}&submit=Go"))
@@ -35,10 +31,6 @@ class BreatheIn::Scraper
     current_conditions_value
     current_conditions_index 
     air_quality
-  end
-
-  def self.under_maintenance #returns true if under maintenance 
-    scraped_pg.css("#pageContent .TblInvisibleFixed tr p[style*='color:#F00;']").text.include?("maintenance")
   end
 
   def self.city_name
@@ -79,9 +71,64 @@ class BreatheIn::Scraper
     current_index.empty? ? nil : air_quality[:last_update_index] = current_index.text.strip
   end
 
-  def self.unavailable_data #returns true if data is unavailable
-    phrase = scraped_pg.css(".TblInvisibleFixed .AQData tr td[valign*='top']").text
-    phrase.include?("Data Not Available")
+  def self.index_good
+    print "Air quality is considered satisfactory, and air pollution poses little or no risk."
   end
+
+  def self.index_moderate
+    print "Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution."
+  end
+
+  def self.index_sensitive
+    print "Members of sensitive groups may experience health effects. The general public is not likely to be affected."
+  end
+
+  def self.index_unhealthy
+    print "Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects."
+  end
+
+  def self.index_very_unhealthy
+    print "Health warnings of emergency conditions. The entire population is more likely to be affected."
+  end
+
+  def self.index_hazardous
+    print "Health alert: everyone may experience more serious health effects."
+  end
+
+  def self.AQI_range_information
+    information = <<-Ruby
+      The Air Quality Index (AQI) translates air quality data into an easily understandable number to identify how clean or polluted the outdoor air is, along with possible health effects. 
+      The U.S. Environmental Protection Agency, National Oceanic and Atmospheric Administration, National Park Service, tribal, state, and local agencies developed the AirNow system to provide the public with easy access to national air quality information. 
+
+      "Good" AQI is 0 - 50. 
+      Air quality is considered satisfactory, and air pollution poses little or no risk.
+      ***************************
+      "Moderate" AQI is 51 - 100. 
+      Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people. For example, people who are unusually sensitive to ozone may experience respiratory symptoms.
+      ***************************
+      "Unhealthy for Sensitive Groups" AQI is 101 - 150. 
+      Although general public is not likely to be affected at this AQI range, people with lung disease, older adults and children are at a greater risk from exposure to ozone, whereas persons with heart and lung disease, older adults and children are at greater risk from the presence of particles in the air. 
+      ***************************
+      "Unhealthy" AQI is 151 - 200. 
+      Everyone may begin to experience some adverse health effects, and members of the sensitive groups may experience more serious effects.
+      ***************************
+      "Very Unhealthy" AQI is 201 - 300. 
+      This would trigger a health alert signifying that everyone may experience more serious health effects.
+      ***************************
+      "Hazardous" AQI greater than 300. 
+      This would trigger a health warnings of emergency conditions. The entire population is more likely to be affected.
+      ***************************
+      All descriptions, information, and data are provided courtesy of AirNow.gov. Visit the website to learn more.
+    Ruby
+    puts information
+  end
+
+  def self.under_maintenance #returns true if under maintenance 
+    scraped_pg.css("#pageContent .TblInvisibleFixed tr p[style*='color:#F00;']").text.include?("maintenance")
+  end
+
+  # def self.unavailable_data #returns true if data is unavailable
+  #   phrase = scraped_pg.css(".TblInvisibleFixed .AQData tr td[valign*='top']").text
+  #   phrase.include?("Data Not Available")
+  # end
 end
-binding.pry
