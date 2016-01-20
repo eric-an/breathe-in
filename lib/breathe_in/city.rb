@@ -10,6 +10,7 @@ class BreatheIn::City
 
   def add_city_air_quality(air_quality_hash)
     air_quality_hash.each { |key, value| self.send(("#{key}="), value) }
+    self
   end
 
   def self.cities
