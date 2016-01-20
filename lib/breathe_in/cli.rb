@@ -81,31 +81,14 @@ class BreatheIn::CLI
 
   def assign_attributes(new_city)
     attributes = BreatheIn::Scraper.city_air_quality
+
+    attributes[:today_high] = "Data currently unavailable." if !attributes.has_key?(:today_high)
+    attributes[:today_index] = "Data currently unavailable." if !attributes.has_key?(:today_index)
+    attributes[:last_update_value] = "Data currently unavailable." if !attributes.has_key?(:last_update_value)
+    attributes[:last_update_time] = "Data currently unavailable." if !attributes.has_key?(:last_update_time)
+    attributes[:last_update_index] = "Data currently unavailable." if !attributes.has_key?(:last_update_index)  
+
     city_info_hash = new_city.add_city_air_quality(attributes)
-
-    if !BreatheIn::Scraper.today_high
-      city_info_hash
-      new_city.today_high = "Today's high currently unavailable."
-
-    elsif !BreatheIn::Scraper.current_conditions_value
-      city_info_hash
-      new_city.last_update_value = "Current AQI unavailable."
-
-    elsif !BreatheIn::Scraper.index_level
-      city_info_hash
-      new_city.today_index = "Level information unavailable."
-
-    elsif !BreatheIn::Scraper.current_conditions_time
-      city_info_hash
-      new_city.last_update_time = "Time unavailable."
-
-    elsif !BreatheIn::Scraper.current_conditions_index 
-      city_info_hash
-      new_city.last_update_index = "Current level unavailable."
-
-    else
-      city_info_hash
-    end
   end
 
   def display_information
