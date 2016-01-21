@@ -19,7 +19,7 @@ class BreatheIn::CLI
     get_zipcode
     scrape_data
     if BreatheIn::Scraper.city_name == nil
-      puts "That zipcode is not recognized by Air.gov."
+      puts "That zipcode is not recognized by AirNow.gov."
       get_information
     else
       new_city = BreatheIn::City.new({zipcode: self.class.zipcode})
