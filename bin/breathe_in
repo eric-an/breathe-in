@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-
+require "bundler/setup"
 require "breathe_in"
 
 BreatheIn::CLI.new.run
