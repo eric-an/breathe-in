@@ -16,7 +16,7 @@ class BreatheIn::Scraper
       @@scraped = Nokogiri::HTML(open("https://airnow.gov/?action=airnow.local_city&zipcode=#{zipcode}&submit=Go"))
     rescue OpenURI::HTTPError => e
         if e.message == '404 Not Found'
-          puts "The website is currently down. Pleaes try again later."
+          puts "The website is currently down. Please try again later."
         else
           raise e
         end
